@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Title</title>
+</head>
+
+<body>
+<!--
+    <style>
+        .my-class {
+            /* стили для элементов с классом my-class */
+            color: green; /* весь текст зеленого цвета для класса class='my-class' */
+        }
+    </style>
+-->
+    <style>
+        #my-class,.my-class {
+            margin-top: 10px;
+            margin-right: 20px;
+            margin-bottom: 10px;
+            margin-left: 20px;
+            /*display: inline-block;*/
+            float: both;
+            color: rgb(122, 137, 222); /* весь текст зеленого цвета для класса class='my-class' */
+        }
+    </style>
+
+    <style>
+        body {
+            background-color: lightgray;
+            font-family: Arial, sans-serif;
+        }
+    </style>
+
+    <style>
+        input[type="reset"]:hover {
+            /* стили для всех input с атрибутом type="reset" */
+            color: blue;
+            background: orange;
+    }
+    </style>
+    <style>
+        article *:hover {
+            /* стили для всех элементов <p>, которые являются потомками элементов <article> */
+            color: rgb(107, 145, 107);
+            background: orange;
+    }
+    </style>
+    
+    <style>
+        p:hover:first-line {
+            /* стили для первой строки текста внутри абзаца */
+            background: #ff6a7d;
+    }
+    </style>
+    <p>Первая строка<br>Вторая строка<br>Третья строка</p>
+    
+    <style>
+        body {
+            background-color: lightgray;
+            font-family: Arial, sans-serif;
+        }
+    </style>
+    
+    <p style="color: blue; font-size: 26px;">Текст с встроенными стилями.</p>
+
+    <article>
+        <p>Этот текст стилизован</p>
+        <span>А этот нет</span>
+    </article>
+
+    Эта кнопка стилизована <input type="reset" value="Button"><br>
+    А эта нет <input type="button" value="Button">
+
+    <p class="my-class">Это текcт стилизован</p>
+    <p>А этот нет. <span id="my-class">А этот да!</span></p>    
+    <button class="my-class">Эта кнопка тоже</button>
+    <iframe src=".\example.html" width="500" height="300"></iframe>
+</body>
+</html>
