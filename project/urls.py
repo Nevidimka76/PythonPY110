@@ -16,21 +16,23 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from random import random
-from django.http import HttpResponse
-from app_datetime.views import datetime_view, dateView, fileView
+# from django.urls import path,re_path
+# from random import random
+# from django.http import HttpResponse
+# from app_datetime.views import datetime_view, dateView, fileView
 
 
-def random_view(request):
-    if request.method == "GET":
-        data = random()
-        return HttpResponse(data)
+# def random_view(request):
+#     if request.method == "GET":
+#         data = random()
+#         return HttpResponse(data)
     
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('random/', random_view),
-    path('file/', fileView),
-    path('datetime/', datetime_view),
-    path('datetime/json/<int:year>/', dateView.as_view()),
-    path('datetime/json/', dateView.as_view()),
+    # path('random/', random_view),
+    # path('file/', fileView),
+    # path('datetime/', datetime_view),
+    # re_path(r'^json/(?P<d>[0-9]{1,2})/(?P<m>[0-9]{1,2})/(?P<year>[0-9]{4})/$', dateView.as_view()),
+    # #path('datetime/json/<int:year>/', dateView.as_view()),
+    # path('datetime/json/', dateView.as_view()),
 ]
