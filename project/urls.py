@@ -15,7 +15,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 # from django.urls import path,re_path
 # from random import random
 # from django.http import HttpResponse
@@ -29,6 +29,7 @@ from django.urls import path
     
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('',include('app_weather.urls')),
     # path('random/', random_view),
     # path('file/', fileView),
     # path('datetime/', datetime_view),
