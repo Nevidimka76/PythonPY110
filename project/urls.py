@@ -18,8 +18,7 @@ from django.contrib import admin
 from django.urls import path
 from random import random
 from django.http import HttpResponse
-from app_datetime.views import datetime_view
-from app_datetime.views import dateView
+from app_datetime.views import datetime_view, dateView, fileView
 
 
 def random_view(request):
@@ -30,6 +29,8 @@ def random_view(request):
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('random/', random_view),
+    path('file/', fileView),
     path('datetime/', datetime_view),
-    path('datetime1/', dateView.as_view()),
+    path('datetime/json/<int:year>/', dateView.as_view()),
+    path('datetime/json/', dateView.as_view()),
 ]
