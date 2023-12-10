@@ -19,6 +19,8 @@ from django.urls import path
 from random import random
 from django.http import HttpResponse
 from app_datetime.views import datetime_view
+from app_datetime.views import dateView
+
 
 def random_view(request):
     if request.method == "GET":
@@ -29,4 +31,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('random/', random_view),
     path('datetime/', datetime_view),
+    path('datetime1/', dateView.as_view()),
 ]
