@@ -29,6 +29,7 @@ from django.urls import path, include
     
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('weather/',include('app_weather.urls')),
     path('',include('store.urls')),
     # path('random/', random_view),
     # path('file/', fileView),
