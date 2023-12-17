@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse, HttpResponseNotFound 
 from django.views import View
 from .models import DATABASE as db
+from logic.services import filtering_category
 
 # Create your views here.
 
@@ -15,8 +16,8 @@ class shopView(View):
 
 class productsView(View):
     def get(self,rqst):
-        id_=rqst.GET.get('id')
-        if id_:
+        #id_=rqst.GET.get('id')
+        if id_ := rqst.GET.get('id'):
             product=db.get(id_)
             if product:
                 data=db[id_]
@@ -25,8 +26,22 @@ class productsView(View):
         else:
             data=db
             
-        return JsonResponse(data, json_dumps_params={'ensure_ascii': False,
-                                                     'indent': 4})  
+        if category_key := rqst.GET.get("category"):  # Считали 'category' 
+            if ordering_key := rqst.GET.get("ordering"): # Если в параметрах есть 'ordering'
+                if rqst.GET.get("reverse") in ('true', 'True'): # Если в параметрах есть 'ordering' и 'reverse'=True
+                    data = filtering_category(db,category_key,ordering_key,True) #  TODO Провести фильтрацию с параметрами
+                else:
+                    data = filtering_category(db,category_key,ordering_key) #  TODO Провести фильтрацию с параметрами
+            else:
+                data = filtering_category(db,category_key) #  TODO Провести фильтрацию с параметрами
+            # В этот раз добавляем параметр safe=False, для корректного отображения списка в JSON
+            return JsonResponse(data, safe=False, json_dumps_params={'ensure_ascii': False,
+                                                                 'indent': 4})
+
+        # return JsonResponse(data, json_dumps_params={'ensure_ascii': False,
+        #                                              'indent': 4})  
+
+
 class productsPageView(View):
     def get(self,reqst,page):
         if isinstance(page,str):
