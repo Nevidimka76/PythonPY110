@@ -3,6 +3,8 @@ import os
 from store.models import DATABASE as db
 
 
+
+
 def viewInCart() -> dict:
 
     """
@@ -21,7 +23,7 @@ def viewInCart() -> dict:
     return cart
 
 
-def addToCart(id_product: str) -> bool:
+def addToCart(id_product: str, db: str=db) -> bool:
     """
     Добавляет продукт в корзину. Если в корзине нет данного продукта, то добавляет его с количеством равное 1.
     Если в корзине есть такой продукт, то добавляет количеству данного продукта + 1.
@@ -32,10 +34,10 @@ def addToCart(id_product: str) -> bool:
     """
     cart = viewInCart()
     if db.get(id_product):
-        if cart['product'].get(id_product):
-            cart['product'][id_product]+=1
+        if cart['products'].get(id_product):
+            cart['products'][id_product]+=1
         else:
-            cart['product'][id_product]=1
+            cart['products'][id_product]=1
     else:
         return False
     
@@ -64,7 +66,16 @@ def removeFromCart(id_product: str) -> bool:
     :return: Возвращает True в случае успешного удаления, а False в случае неуспешного удаления(товара по id_product
     не существует).
     """
-    cart = ...  # TODO Помните, что у вас есть уже реализация просмотра корзины,
+    cart = viewInCart() # TODO Помните, что у вас есть уже реализация просмотра корзины,
+    if cart["products"].get(id_product):
+       cart['products'].pop(id_product) 
+    else:
+        return False
+
+    with open('cart.json', mode='w', encoding='utf-8') as f:   # Создаём файл и записываем туда пустую корзину
+        json.dump(cart, f)
+            
+
     # поэтому, чтобы загрузить данные из корзины, не нужно заново писать код.
 
     # TODO Проверьте, а существует ли такой товар в корзине, если нет, то возвращаем False.
@@ -119,9 +130,9 @@ if __name__ == "__main__":
     print(addToCart('1'))  # True
     print(addToCart('2'))  # True
     print(viewInCart())  # {'products': {'1': 2, '2': 1}}
-    # print(remove_from_cart('0'))  # False
-    # print(remove_from_cart('1'))  # True
-    # print(view_in_cart())  # {'products': {'2': 1}}
+    print(removeFromCart('0'))  # False
+    print(removeFromCart('1'))  # True
+    print(viewInCart())  # {'products': {'2': 1}}
 
 
 

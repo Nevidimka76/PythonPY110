@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse, HttpResponseNotFound 
 from django.views import View
 from .models import DATABASE as db
-from logic.services import filtering_category
+from logic.services import filtering_category,viewInCart,addToCart,removeFromCart
 
 # Create your views here.
 
@@ -57,3 +57,33 @@ class productsPageView(View):
                     return HttpResponse(data)
             
         return HttpResponseNotFound('Описания товара нет')
+    
+class cartView(View):
+    def get(self,rqst):
+        data=viewInCart()
+        return JsonResponse(data, json_dumps_params={'ensure_ascii': False,
+                                                     'indent': 4})
+
+
+class cartAddView(View):
+    def get(self,rqst,idProduct):
+        result=addToCart(idProduct,db)
+        if result:
+            return JsonResponse({"answer": "Продукт успешно добавлен в корзину"},
+                                json_dumps_params={'ensure_ascii': False})
+
+        return JsonResponse({"answer": "Неудачное добавление в корзину"},
+                            status=404,
+                            json_dumps_params={'ensure_ascii': False})
+
+
+class cartDelView(View):
+    def get(self,rqst,idProduct):
+        result=removeFromCart(idProduct)
+        if result:
+            return JsonResponse({"answer": "Продукт успешно удалён из корзины"},
+                                json_dumps_params={'ensure_ascii': False})
+
+        return JsonResponse({"answer": "Неудачное удаление из корзины"},
+                            status=404,
+                            json_dumps_params={'ensure_ascii': False})    
