@@ -15,7 +15,7 @@ from logic.services import filtering_category,viewInCart,addToCart,removeFromCar
         
 class shopView(View):
     def get(self,requests):
-        return render(requests,'shop.html')
+        return render(requests,'store/shop.html')
 
 class productsView(View):
     def get(self,rqst):
