@@ -7,12 +7,15 @@ from logic.services import filtering_category,viewInCart,addToCart,removeFromCar
 
 # Create your views here.
 
+# class shopView(View):
+#     def get(self,requests):
+#         with open('store/shop.html', encoding="utf-8") as f:
+#             data = f.read()  # Читаем HTML файл
+#         return HttpResponse(data)
+        
 class shopView(View):
     def get(self,requests):
-        with open('store/shop.html', encoding="utf-8") as f:
-            data = f.read()  # Читаем HTML файл
-        return HttpResponse(data)
-        
+        return render(requests,'shop.html')
 
 class productsView(View):
     def get(self,rqst):
