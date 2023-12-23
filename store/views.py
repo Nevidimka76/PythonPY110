@@ -64,9 +64,17 @@ class productsPageView(View):
 class cartView(View):
     def get(self,rqst):
         data=viewInCart()
-        return JsonResponse(data, json_dumps_params={'ensure_ascii': False,
-                                                     'indent': 4})
-
+        if rqst.GET.get('format') == 'JSON':
+            return JsonResponse(data, json_dumps_params={'ensure_ascii': False,
+                                                         'indent': 4})
+        products=[]
+        for product_id, quantity in data['products'].items():
+            product=db.get(product_id)
+            product['quantity']=quantity
+            product['price_total']=f"{quantity*product['price_after']:2f}"
+            products.append(product)
+        return render(rqst,'store/cart.html', context={'products': products})
+    
 
 class cartAddView(View):
     def get(self,rqst,idProduct):
