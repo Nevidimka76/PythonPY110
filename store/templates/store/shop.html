@@ -22,11 +22,36 @@
     		<div class="row justify-content-center">
     			<div class="col-md-10 mb-5 text-center">
     				<ul class="product-category">
-    					<li><a href="#" class="active">Все</a></li>
-    					<li><a href="#">Овощи</a></li>
-    					<li><a href="#">Фрукты</a></li>
-    					<li><a href="#">Соки</a></li>
-    					<li><a href="#">Семена</a></li>
+						{% if category is None %}
+						<li><a href="{% url 'store:shopView' %}" class="active">Все</a></li>
+						{% else %}
+						<li><a href="{% url 'store:shopView' %}">Все</a></li>
+						{% endif %}
+						
+						{% if category == 'Овощи' %}
+						<li><a href="{% url 'store:shopView' %}?category={{category}}" class="active">Овощи</a></li>
+						{% else %}
+						<li><a href="{% url 'store:shopView' %}?category=Овощи">Овощи</a></li>
+						{% endif %}
+						
+						{% if category == 'Фрукты' %}
+						<li><a href="{% url 'store:shopView' %}?category={{category}}" class="active">Фрукты</a></li>
+						{% else %}
+						<li><a href="{% url 'store:shopView' %}?category=Фрукты">Фрукты</a></li>
+						{% endif %}
+						
+						{% if category == 'Соки' %}
+						<li><a href="{% url 'store:shopView' %}?category={{category}}" class="active">Соки</a></li>
+						{% else %}
+						<li><a href="{% url 'store:shopView' %}?category=Соки">Соки</a></li>
+						{% endif %}
+						
+						{% if category == 'Семена' %}
+						<li><a href="{% url 'store:shopView' %}?category={{category}}" class="active">Семена</a></li>
+						{% else %}
+						<li><a href="{% url 'store:shopView' %}?category=Семена">Семена</a></li>
+						{% endif %}
+
     				</ul>
     			</div>
     		</div>

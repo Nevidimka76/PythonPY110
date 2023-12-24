@@ -14,8 +14,21 @@ from logic.services import filtering_category,viewInCart,addToCart,removeFromCar
 #         return HttpResponse(data)
         
 class shopView(View):
-    def get(self,requests):
-        return render(requests,'store/shop.html',context={'products': db.values()})
+    def get(self,rqst):
+        if category_key := rqst.GET.get("category"):  # Считали 'category' 
+            if ordering_key := rqst.GET.get("ordering"): # Если в параметрах есть 'ordering'
+                if rqst.GET.get("reverse") in ('true', 'True'): # Если в параметрах есть 'ordering' и 'reverse'=True
+                    data = filtering_category(db,category_key,ordering_key,True) #  TODO Провести фильтрацию с параметрами
+                else:
+                    data = filtering_category(db,category_key,ordering_key) #  TODO Провести фильтрацию с параметрами
+            else:
+                data = filtering_category(db,category_key) #  TODO Провести фильтрацию с параметрами
+        else:
+            data=db.values()
+        # return render(rqst,'store/shop.html',context={'products': db.values()})
+        return render(rqst,'store/shop.html',context={'products': data,
+                                                       'category': category_key})
+    
 
 class productsView(View):
     def get(self,rqst):
@@ -46,18 +59,38 @@ class productsView(View):
 
 
 class productsPageView(View):
-    def get(self,reqst,page):
+    def get(self,rqst,page):
         if isinstance(page,str):
             for data in db.values():
                 if data['html']==page:
-                    with open(f'store/products/{page}.html', encoding="utf-8") as f:
-                        data = f.read()  # Читаем HTML файл
-                    return HttpResponse(data)
+                    category=data['category']
+                    product=data
+                    other=[]
+                    for data in db.values():
+                        if category!=data['category'] or data==product:
+                            continue
+                        other.append(data)    
+                    return render(rqst, "store/product.html", context={"product": product, 
+                                                                       "other": other})
+                    # with open(f'store/products/{page}.html', encoding="utf-8") as f:
+                    #     data = f.read()  # Читаем HTML файл
+                    # return HttpResponse(data)
         elif isinstance(page,int):
                 if data:=db.get(str(page)):
-                    with open(f"store/products/{data['html']}.html", encoding="utf-8") as f:
-                        data = f.read()  # Читаем HTML файл
-                    return HttpResponse(data)
+                    category=data['category']
+                    product=data
+                    other=[]
+                    for data in db.values():
+                        if category!=data['category'] or data==product:
+                            continue
+                        other.append(data)    
+                    return render(rqst, "store/product.html", context={"product": product, 
+                                                                       "other": other})
+                    
+                    # return render(rqst, "store/product.html", context={"product": data})
+                    # with open(f"store/products/{data['html']}.html", encoding="utf-8") as f:
+                    #     data = f.read()  # Читаем HTML файл
+                    # return HttpResponse(data)
             
         return HttpResponseNotFound('Описания товара нет')
     
