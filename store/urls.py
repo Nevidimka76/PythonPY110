@@ -9,7 +9,7 @@ urlpatterns = [
     path('',shopView.as_view(), name="shopView"),
     path('product/<slug:page>.html',productsPageView.as_view(), name='productsPageView'),
     path('product/<int:page>', productsPageView.as_view(), name='productsPageViewInt'),
-    path('cart/', cartView.as_view()),
+    path('cart/', cartView.as_view(),name='cartView'),
     path('cart/add/<str:idProduct>', cartAddView.as_view()),
     path('cart/del/<str:idProduct>', cartDelView.as_view()),
 ] 
