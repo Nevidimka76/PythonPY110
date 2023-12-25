@@ -121,3 +121,31 @@ class cartDelView(View):
         return JsonResponse({"answer": "Неудачное удаление из корзины"},
                             status=404,
                             json_dumps_params={'ensure_ascii': False})    
+
+
+class couponСheckView(View):
+    # DATA_COUPON - база данных купонов: ключ - код купона (name_coupon); значение - словарь со значением скидки в процентах и
+    # значением действителен ли купон или нет
+    def __init__(self):
+        super().__init__()
+        self.DATA_COUPON = {
+            "coupon": {
+                "value": 10,
+                "is_valid": True},
+            "coupon_old": {
+                "value": 20,
+                "is_valid": False},
+        }
+    
+    def get(self,rqst,name_coupon):
+        if Coupon:=self.DATA_COUPON.get(name_coupon):
+            return JsonResponse({"discount": Coupon['value'],
+                                 "is_valid": Coupon['is_valid']},
+                            json_dumps_params={'ensure_ascii': False})    
+        else:    
+            return HttpResponseNotFound("Неверный купон")
+        # TODO Проверьте, что купон есть в DATA_COUPON, если он есть, то верните JsonResponse в котором по ключу "discount"
+        # получают значение скидки в процентах, а по ключу "is_valid" понимают действителен ли купон или нет (True, False)
+
+        # TODO Если купона нет в базе, то верните HttpResponseNotFound("Неверный купон")
+        
