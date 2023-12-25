@@ -61,29 +61,19 @@ class productsView(View):
 class productsPageView(View):
     def get(self,rqst,page):
         if isinstance(page,str):
-            for data in db.values():
-                if data['html']==page:
-                    category=data['category']
-                    product=data
-                    other=[]
-                    for data in db.values():
-                        if category!=data['category'] or data==product:
-                            continue
-                        other.append(data)    
+            for product in db.values():
+                if product['html']==page:
+                    category=product['category']
+                    other=[data for data in db.values if data[category]==category and data!=product]
                     return render(rqst, "store/product.html", context={"product": product, 
                                                                        "other": other})
                     # with open(f'store/products/{page}.html', encoding="utf-8") as f:
                     #     data = f.read()  # Читаем HTML файл
                     # return HttpResponse(data)
         elif isinstance(page,int):
-                if data:=db.get(str(page)):
-                    category=data['category']
-                    product=data
-                    other=[]
-                    for data in db.values():
-                        if category!=data['category'] or data==product:
-                            continue
-                        other.append(data)    
+                if product:=db.get(str(page)):
+                    category=product['category']
+                    other=[data for data in db.values() if data['category'] == category and data != product]
                     return render(rqst, "store/product.html", context={"product": product, 
                                                                        "other": other})
                     
