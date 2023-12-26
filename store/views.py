@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 
 from django.http import JsonResponse, HttpResponse, HttpResponseNotFound 
 from django.views import View
@@ -163,4 +163,19 @@ class deliveryEstimateView(View):
                             json_dumps_params={'ensure_ascii': False})    
         else:    
             return HttpResponseNotFound("Неверные данные")
-             
+
+class cartBuyNowView(View):
+    def get(self,rqst,idProduct):
+        result=addToCart(idProduct,db)
+        if result:
+            #return cartView().get(rqst)
+            return redirect("store:cartView")
+        return HttpResponseNotFound("Неудачное добавление в корзину")    
+    
+class cartRemoveView(View):
+    def get(self,rqst,idProduct):
+        result=removeFromCart(idProduct)
+        if result:
+            return redirect("store:cartView")
+        return HttpResponseNotFound("Неудачное удаление из корзины")    
+        
