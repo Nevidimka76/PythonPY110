@@ -174,3 +174,20 @@ DATABASE = {'1': {'name': 'Болгарский перец',
                    'html': 'chilli'
                    },
             }
+
+DATA_COUPON = {
+            "coupon": {
+                "value": 10,
+                "is_valid": True},
+            "coupon_old": {
+                "value": 20,
+                "is_valid": False},
+        }
+
+DATA_PRICE = {
+      "Россия": {
+            "Москва": {"price": 80},
+            "Санкт-Петербург": {"price": 80},
+            "fix_price": 100,
+      },
+}

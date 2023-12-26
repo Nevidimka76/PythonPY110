@@ -2,7 +2,7 @@ from django.shortcuts import render
 
 from django.http import JsonResponse, HttpResponse, HttpResponseNotFound 
 from django.views import View
-from .models import DATABASE as db
+from .models import DATABASE as db, DATA_PRICE as price, DATA_COUPON as coupon
 from logic.services import filtering_category,viewInCart,addToCart,removeFromCart
 
 # Create your views here.
@@ -126,19 +126,19 @@ class cartDelView(View):
 class couponСheckView(View):
     # DATA_COUPON - база данных купонов: ключ - код купона (name_coupon); значение - словарь со значением скидки в процентах и
     # значением действителен ли купон или нет
-    def __init__(self):
-        super().__init__()
-        self.DATA_COUPON = {
-            "coupon": {
-                "value": 10,
-                "is_valid": True},
-            "coupon_old": {
-                "value": 20,
-                "is_valid": False},
-        }
+    # def __init__(self):
+    #     super().__init__()
+    #     self.DATA_COUPON = {
+    #         "coupon": {
+    #             "value": 10,
+    #             "is_valid": True},
+    #         "coupon_old": {
+    #             "value": 20,
+    #             "is_valid": False},
+    #     }
     
     def get(self,rqst,name_coupon):
-        if Coupon:=self.DATA_COUPON.get(name_coupon):
+        if Coupon:=coupon.get(name_coupon):
             return JsonResponse({"discount": Coupon['value'],
                                  "is_valid": Coupon['is_valid']},
                             json_dumps_params={'ensure_ascii': False})    
@@ -148,4 +148,19 @@ class couponСheckView(View):
         # получают значение скидки в процентах, а по ключу "is_valid" понимают действителен ли купон или нет (True, False)
 
         # TODO Если купона нет в базе, то верните HttpResponseNotFound("Неверный купон")
-        
+
+class deliveryEstimateView(View):
+    def get(self,rqst):
+        data = rqst.GET
+        country = data.get('country')
+        city = data.get('city')
+        if Country:=price.get(country): 
+            if City:=Country.get(city):
+                return JsonResponse({"price": City['price']},
+                            json_dumps_params={'ensure_ascii': False})    
+            else:
+                return JsonResponse({"price": Country['fix_price']},
+                            json_dumps_params={'ensure_ascii': False})    
+        else:    
+            return HttpResponseNotFound("Неверные данные")
+             
