@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-
+from django.contrib.auth import get_user
 from django.http import JsonResponse, HttpResponse, HttpResponseNotFound 
 from django.views import View
 from .models import DATABASE as db, DATA_PRICE as price, DATA_COUPON as coupon
@@ -86,7 +86,8 @@ class productsPageView(View):
     
 class cartView(View):
     def get(self,rqst):
-        data=viewInCart()
+        currentUser=get_user(rqst).username
+        data=viewInCart(rqst)[currentUser]
         if rqst.GET.get('format') == 'JSON':
             return JsonResponse(data, json_dumps_params={'ensure_ascii': False,
                                                          'indent': 4})
@@ -101,7 +102,7 @@ class cartView(View):
 
 class cartAddView(View):
     def get(self,rqst,idProduct):
-        result=addToCart(idProduct,db)
+        result=addToCart(rqst,idProduct,db)
         if result:
             return JsonResponse({"answer": "Продукт успешно добавлен в корзину"},
                                 json_dumps_params={'ensure_ascii': False})
@@ -113,7 +114,7 @@ class cartAddView(View):
 
 class cartDelView(View):
     def get(self,rqst,idProduct):
-        result=removeFromCart(idProduct)
+        result=removeFromCart(rqst,idProduct)
         if result:
             return JsonResponse({"answer": "Продукт успешно удалён из корзины"},
                                 json_dumps_params={'ensure_ascii': False})
@@ -166,7 +167,7 @@ class deliveryEstimateView(View):
 
 class cartBuyNowView(View):
     def get(self,rqst,idProduct):
-        result=addToCart(idProduct,db)
+        result=addToCart(rqst,idProduct,db)
         if result:
             #return cartView().get(rqst)
             return redirect("store:cartView")
@@ -174,7 +175,7 @@ class cartBuyNowView(View):
     
 class cartRemoveView(View):
     def get(self,rqst,idProduct):
-        result=removeFromCart(idProduct)
+        result=removeFromCart(rqst,idProduct)
         if result:
             return redirect("store:cartView")
         return HttpResponseNotFound("Неудачное удаление из корзины")    
