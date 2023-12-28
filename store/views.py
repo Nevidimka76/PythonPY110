@@ -1,7 +1,10 @@
 from typing import Any
 from django.shortcuts import render,redirect
 from django.contrib.auth import get_user
+
+from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
+
 from django.http import JsonResponse, HttpResponse, HttpResponseNotFound 
 from django.views import View
 from .models import DATABASE as db, DATA_PRICE as price, DATA_COUPON as coupon
@@ -87,14 +90,13 @@ class productsPageView(View):
         return HttpResponseNotFound('Описания товара нет')
 
 class cartView(View):
-    # def __init__(self,name=None):
+    # def __init__(self,user=None):
     #     super().__init__()
-    #     self.name=name
-        
-    @login_required(login_url='login:login_view')    
+    #     self.name=user
+    @method_decorator(login_required(login_url='login:login_view'))
     def get(self,rqst):
-        currentUser=get_user(rqst).username
-        data=viewInCart(rqst)[currentUser]
+        user=get_user(rqst).username
+        data=viewInCart(rqst)[user]
         if rqst.GET.get('format') == 'JSON':
             return JsonResponse(data, json_dumps_params={'ensure_ascii': False,
                                                          'indent': 4})
@@ -107,7 +109,7 @@ class cartView(View):
         return render(rqst,'store/cart.html', context={'products': products})
     
 class cartAddView(View):
-#    @login_required(login_url='login:login_view')
+    @method_decorator(login_required(login_url='login:login_view'))
     def get(self,rqst,idProduct):
         result=addToCart(rqst,idProduct,db)
         if result:
@@ -173,7 +175,7 @@ class deliveryEstimateView(View):
             return HttpResponseNotFound("Неверные данные")
 
 class cartBuyNowView(View):
-#    @login_required(login_url='login:login_view')
+    @method_decorator(login_required(login_url='login:login_view'))
     def get(self,rqst,idProduct):
         result=addToCart(rqst,idProduct,db)
         if result:
