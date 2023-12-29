@@ -17,7 +17,7 @@ class wishlistView(View):
             return JsonResponse(data, json_dumps_params={'ensure_ascii': False,
                                                          'indent': 4})
         products=[]
-        for product_id in data['products'].items():
+        for product_id in data['products']:
             product=db.get(product_id)
             product['price_total']=f"{product['price_after']:2f}"
             products.append(product)
