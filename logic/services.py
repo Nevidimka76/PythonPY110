@@ -55,7 +55,7 @@ def addToWish(rqst,id_product: str, db: str=db) -> bool:
     wish_users = viewInWish(rqst)
     wishlist = wish_users[get_user(rqst).username]
     if db.get(id_product):
-        if wishlist['products'].get(id_product):
+        if id_product not in wishlist['products']:
             wishlist['products'].append(id_product)
     else:
         return False
@@ -71,7 +71,7 @@ def removeFromCart(rqst,id_product: str) -> bool:
     cart_users = viewInCart(rqst)
     cart = cart_users[get_user(rqst).username] # TODO Помните, что у вас есть уже реализация просмотра корзины,
     if cart["products"].get(id_product):
-       cart['products'].pop(id_product) 
+           cart['products'].pop(id_product) 
     else:
         return False
 
@@ -81,9 +81,9 @@ def removeFromCart(rqst,id_product: str) -> bool:
 
 def removeFromWish(rqst,id_product: str) -> bool:
     wish_users = viewInWish(rqst)
-    wishlist = wish_users[get_user(rqst).username] # TODO Помните, что у вас есть уже реализация просмотра корзины,
-    if wishlist["products"].get(id_product):
-       wishlist['products'].pop(id_product) 
+    wishlist = wish_users[get_user(rqst).username] 
+    if id_product in wishlist["products"]:
+       wishlist['products'].remove(id_product) 
     else:
         return False
 
@@ -108,7 +108,7 @@ def addUserToWish(rqst,username: str)->None:
     wishlist = wish_users.get(username)  # Получение корзины конкретного пользователя
 
     if not wishlist:  # Если пользователя до настоящего момента не было в корзине, то создаём его и записываем в базу
-        with open('cart.json', mode='w', encoding='utf-8') as f:
+        with open('wishlist.json', mode='w', encoding='utf-8') as f:
             wish_users[username] = {'products': []}
             json.dump(wish_users, f)    
 
